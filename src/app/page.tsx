@@ -1,26 +1,18 @@
-<<<<<<< Updated upstream
 'use client'
-import { Button } from '@/components/ui/button'
-import { useTRPC } from '@/trpc/client'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import React from 'react'
-=======
-import { requireAuth } from "@/lib/get-session"
-import { caller } from "@/trpc/server"
+
+import { Button } from "@/components/ui/button"
+import { useTRPC } from "@/trpc/client"
+
+import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 
 
 
-export default async  function page() {
-  await requireAuth()
-  const data = await caller.getUser()
-
-  const testAi  = await caller.testAi()
 
 
 
 
->>>>>>> Stashed changes
 
 export default function Page() {
   const trpc = useTRPC()
@@ -32,9 +24,16 @@ export default function Page() {
       queryClient.invalidateQueries(trpc.getWorkFlows.queryOptions())
     }
   }))
+
+  const testAi = useMutation(trpc.testAi.mutationOptions({
+    onSuccess:(data) => {
+      toast.success('AI Generated Text: ' + data.success)
+    }
+  }))
+
   return (
     <div className='flex items-center justify-center flex-col min-h-screen gap-y-6'>
-
+ 
       <div>
         {JSON.stringify(data,null,2)}
       </div>
@@ -43,6 +42,12 @@ export default function Page() {
       onClick={() => create.mutate()}>
         Create Workflow
       </Button>
+      <Button
+      disabled={testAi.isPending}
+      onClick={() => testAi.mutate()}>
+        Test AI
+      </Button>
+      
     </div>
   )
 }
