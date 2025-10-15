@@ -1,12 +1,15 @@
 
-import { baseProcedure, createTRPCRouter } from '../init';
+import {  createTRPCRouter, protectedProcedure } from '../init';
 import { prisma } from '@/lib/db';
 export const appRouter = createTRPCRouter({
-  getTest: baseProcedure // This is a procedure for the test endpoint
-   
-    .query(() => {
-      return prisma.test.findMany();
-    }), // A query procedure that fetches all records from the 'test' table
+  getUser: protectedProcedure.query(({ctx}) => {
+    console.log(ctx.auth.user.name)
+      return prisma.user.findMany({
+        where:{
+          id: ctx.auth.user.id
+        }
+      });
+    }), 
 });
 // export type definition of API
 export type AppRouter = typeof appRouter;
