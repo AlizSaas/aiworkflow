@@ -51,6 +51,75 @@ model Session {
   @@map("session")
 }
 
+model Workfloww {
+  id String @id @default(uuid())
+  name String
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 model Account {
   id                    String    @id
   accountId             String
