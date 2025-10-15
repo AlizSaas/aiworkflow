@@ -12,6 +12,11 @@ export const executeAI = inngest.createFunction(
       model: openai('gpt-4.1'),
       system:'You are a helpful assistant that helps people find information.',
       prompt: 'Write a short describtion about  cbr honda bikes.',
+      experimental_telemetry:{
+        isEnabled:true,
+        recordInputs:true,
+        recordOutputs:true,
+      }
 
 
     });
