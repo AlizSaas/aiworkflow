@@ -2,8 +2,26 @@
 import { inngest } from '@/inngest/client';
 import {  createTRPCRouter, protectedProcedure } from '../init';
 import { prisma } from '@/lib/db';
+<<<<<<< Updated upstream
 
+=======
+import { openai } from '@ai-sdk/openai';
+import { generateText } from 'ai';
+>>>>>>> Stashed changes
 export const appRouter = createTRPCRouter({
+  testAi: protectedProcedure.mutation( async () => {
+
+const { text } = await generateText({
+  model: openai('gpt-4.1'),
+  prompt: 'Write a short describtion about  cbr honda bikes.',
+});
+
+return text;
+
+  }),
+
+
+
   getUser: protectedProcedure.query(({ctx}) => {
     console.log(ctx.auth.user.name)
       return prisma.user.findMany({

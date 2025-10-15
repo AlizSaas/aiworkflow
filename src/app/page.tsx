@@ -1,8 +1,26 @@
+<<<<<<< Updated upstream
 'use client'
 import { Button } from '@/components/ui/button'
 import { useTRPC } from '@/trpc/client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React from 'react'
+=======
+import { requireAuth } from "@/lib/get-session"
+import { caller } from "@/trpc/server"
+
+
+
+
+export default async  function page() {
+  await requireAuth()
+  const data = await caller.getUser()
+
+  const testAi  = await caller.testAi()
+
+
+
+
+>>>>>>> Stashed changes
 
 export default function Page() {
   const trpc = useTRPC()
