@@ -148,6 +148,11 @@ exports.Prisma.SessionScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.WorkflowwScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
 exports.Prisma.AccountScalarFieldEnum = {
   id: 'id',
   accountId: 'accountId',
@@ -193,6 +198,7 @@ exports.Prisma.ModelName = {
   Test: 'Test',
   User: 'User',
   Session: 'Session',
+  Workfloww: 'Workfloww',
   Account: 'Account',
   Verification: 'Verification'
 };
