@@ -1,6 +1,7 @@
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, SearchIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { Input } from "./ui/input";
 
  type EntityHeaderProps  = {
     title:string,
@@ -75,5 +76,69 @@ export const EntityContainer = ({header,search,pagination,children}:EntityContai
             </div>
                  </div>
         </div>
+    )
+}
+
+interface EntitySearchProps {
+    value: string
+    onChange?:(value:string) => void
+    placeholder?: string
+}
+
+export const EntitySearch = ({
+    value,
+    onChange,
+    placeholder
+}: EntitySearchProps) => {
+
+    return (
+        <div className="relative ml-auto">
+            <SearchIcon className="size-3 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Input className="pl-10" placeholder={placeholder} value={value} onChange={(e) => onChange?.(e.target.value)} />
+
+        </div>
+    )
+}
+
+interface EntityPaginationProps {
+    page:number,
+    totalPages:number,
+    onPageChange:(page:number) => void
+    disabled?:boolean
+} 
+export const EntityPagination = ({page,totalPages,onPageChange,disabled}:EntityPaginationProps) => {
+
+    return (
+        <div className="flex justify-between items-center gap-x-4 w-full">
+           <div className="flex-1 text-sm text-muted-foreground">
+            <span className="font-medium">
+                Page {page} of {totalPages || 1}
+            </span>
+
+           </div>
+
+           <div className="flex items-center justify-end space-x-2 py-4">
+            <Button
+            variant="outline"
+            size="sm"   
+
+            disabled={disabled || page <= 1} // disable if on first page
+            onClick={() => onPageChange(Math.max(1,page - 1))} // ensure page doesn't go below 1
+            >
+                Previous
+            </Button>
+            <Button
+            variant="outline"
+            size="sm"   
+            disabled={disabled || page >= totalPages}
+            onClick={() => onPageChange(Math.min(totalPages, page + 1))} // ensure page doesn't exceed totalPages
+            >
+                Next
+            </Button>
+
+
+           </div>
+        </div>
+
     )
 }
