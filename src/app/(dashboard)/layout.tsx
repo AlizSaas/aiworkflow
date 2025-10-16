@@ -1,6 +1,6 @@
-import { AppSidebar } from '@/components/app-sidebar'
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-import React from 'react'
+import { AppSidebar } from "@/components/app-sidebar"
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import type React from "react"
 
 /**
  * Layout component that wraps page content with the application sidebar and an inset container.
@@ -11,13 +11,13 @@ import React from 'react'
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
-        <AppSidebar />
-       <SidebarInset className=''>
+      <AppSidebar />
+      <SidebarInset className="">
+        <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
+          <SidebarTrigger />
+        </header>
         {children}
-
-       </SidebarInset>
-
-
+      </SidebarInset>
     </SidebarProvider>
   )
 }
