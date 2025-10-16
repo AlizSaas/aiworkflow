@@ -8,6 +8,13 @@ import { useMutation } from '@tanstack/react-query'
 import React from 'react'
 import { toast } from 'sonner'
 
+/**
+ * Renders a centered "Test AI" button that triggers a TRPC test-ai mutation and shows toast notifications for success or error.
+ *
+ * When the button is clicked the component calls the mutation; on success it displays a success toast with `data.message`, and on error it displays an error toast with `error.message`.
+ *
+ * @returns The rendered React element.
+ */
 export default function TestSubs() {
     const trpc = useTRPC()
 
