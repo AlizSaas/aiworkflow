@@ -7,6 +7,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
         <AppSidebar />
        <SidebarInset className=''>
+        {children}
 
        </SidebarInset>
 
