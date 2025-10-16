@@ -6,6 +6,11 @@ import { usePathname,useRouter } from 'next/navigation'
 import {Sidebar,SidebarContent,SidebarFooter,SidebarGroup,  SidebarGroupContent,SidebarHeader,SidebarMenu,SidebarMenuButton,SidebarMenuItem} from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
 import { NavUser } from './nav-user'
+import { authClient } from '@/lib/auth-clients'
+import { checkout } from '@polar-sh/better-auth'
+import { toast } from 'sonner'
+import { ThemeToggle } from './features/theme/theme-toggle'
+import { useHasActiveSubscription } from './features/subscriptions/hooks/use-subscription'
 
 
 const menuItems = [
@@ -35,10 +40,14 @@ export const AppSidebar = () => {
     const router = useRouter()
     const pathname = usePathname()
 
+    const {isLoading,hasActiveSubscription} = useHasActiveSubscription()
+    console.log('hasActiveSubscription:', hasActiveSubscription)
+
+
     return (
-        <Sidebar collapsible='icon'>
-            <SidebarHeader>
-                <SidebarMenuItem>
+        <Sidebar collapsible='icon' className=''>
+            <SidebarHeader className=''>
+                <SidebarMenuItem className='justify-between flex items-center  gap-3'>
                     <SidebarMenuButton asChild className='h-10 gap-x-4 px-4'>
                         <Link href='/' prefetch>
                             <Image 
@@ -54,6 +63,7 @@ export const AppSidebar = () => {
                             </span>
                         </Link>
                     </SidebarMenuButton>
+                    <ThemeToggle />
                 </SidebarMenuItem>
 
             </SidebarHeader>
@@ -104,10 +114,14 @@ export const AppSidebar = () => {
             <SidebarFooter>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton 
+                       {
+                        !hasActiveSubscription && !isLoading && (
+                             <SidebarMenuButton 
                         className='gap-x-4 h-10 px-4'
                         tooltip={'Upgrade to Pro'}
-                        onClick={() => {}}
+                        onClick={() => {
+                            authClient.checkout({slug:'pro',})
+                        }}
                         
                         >
                             <StarIcon className='size-4' />
@@ -117,10 +131,12 @@ export const AppSidebar = () => {
 
 
                         </SidebarMenuButton>
+                        ) 
+                       } 
                         <SidebarMenuButton 
                         className='gap-x-4 h-10 px-4'
                         tooltip={'Billing'}
-                        onClick={() => {}}
+                       
                         
                         >
                             <CreditCardIcon className='size-4' />

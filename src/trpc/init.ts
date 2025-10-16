@@ -1,6 +1,9 @@
 import { auth } from '@/lib/auth';
+import { polarClient } from '@/lib/polar';
+
 import { initTRPC, TRPCError } from '@trpc/server';
 import { th } from 'date-fns/locale';
+import next from 'next';
 import { headers } from 'next/headers';
 import { cache } from 'react';
 export const createTRPCContext = cache(async () => {
@@ -23,6 +26,8 @@ const t = initTRPC.create({
 export const createTRPCRouter = t.router; // Helper to create routers
 export const createCallerFactory = t.createCallerFactory; // Helper to create callers
 export const baseProcedure = t.procedure;  // Helper to create procedures 
+
+
 export const protectedProcedure = baseProcedure.use(async ({ctx,next}) => {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -33,5 +38,16 @@ export const protectedProcedure = baseProcedure.use(async ({ctx,next}) => {
   }
 
   return next({ctx:{...ctx,auth:session}})
+
+})
+export const premiumProcedure = protectedProcedure.use(async ({ctx,next}) => {
+  const customer = await polarClient.customers.getStateExternal({
+    externalId: ctx.auth.user.id
+  })
+  if(!customer || customer.activeSubscriptions.length === 0) {
+    throw new TRPCError({code:'FORBIDDEN',message:'You must be a premium user to access this resource'})
+  }
+
+  return next({ctx:{...ctx,customer}})
 
 })
