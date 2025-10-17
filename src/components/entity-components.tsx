@@ -159,7 +159,7 @@ interface LoadingViewProps extends StateViewProps {
 
 export const LoadingView = ({ message }: LoadingViewProps) => {
     return (
-        <div className="flex justify-center items-center h-full flex-1 flex-col gap-y-4">
+        <div className="flex justify-center items-center h-full min-h-screen flex-col gap-y-4">
             <Loader2Icon className="size-6 animate-spin" />
             {
                 !!message && (
@@ -178,11 +178,11 @@ interface ErrorViewProps extends StateViewProps {
 
 export const ErrorView = ({ message }: ErrorViewProps) => {
     return (
-        <div className="flex justify-center items-center h-full flex-1 flex-col gap-y-4">
-           <AlertTriangleIcon className="size-6 text-destructive" />
+        <div className="flex justify-center items-center h-full min-h-screen flex-col gap-y-4">
+            <AlertTriangleIcon className="size-6 text-destructive" />
             {
                 !!message && (
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-destructive text-center">
                         {message}
                     </p>
                 )
