@@ -11,6 +11,15 @@ interface WorkflowIdProps {
 }
 
 
+/**
+ * Render the workflow editor page for the given workflow ID.
+ *
+ * Ensures the user is authenticated and prefetches workflow data for client hydration,
+ * then returns the hydrated React tree containing the editor header and editor.
+ *
+ * @param params - A promise that resolves to an object with the `workflowId` path parameter.
+ * @returns The React element representing the workflow editor page.
+ */
 export default async function page({ params }: WorkflowIdProps) {
   await requireAuth()
   const { workflowId } = await params;

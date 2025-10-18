@@ -13,6 +13,17 @@ interface WorkflowNodeProps {
     name?: string,
     description?: string,
 }
+/**
+ * Renders a workflow node that can show optional top toolbar actions and a bottom caption.
+ *
+ * @param children - Content to render inside the node.
+ * @param showToolbar - When `true`, displays the top toolbar with settings and delete actions.
+ * @param onDelete - Callback invoked when the delete action is clicked.
+ * @param onSettings - Callback invoked when the settings action is clicked.
+ * @param name - Optional caption text displayed in a bottom toolbar.
+ * @param description - Optional secondary text shown under the `name`.
+ * @returns The rendered workflow node element.
+ */
 export function WorkflowNode({ children, showToolbar=true, onDelete, onSettings, name, description }: WorkflowNodeProps) {
     return (
         <>
