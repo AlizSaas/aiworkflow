@@ -23,7 +23,7 @@ export default async function page({ params }: WorkflowIdProps) {
         <ErrorBoundary fallback={<EditorError />}>
           <Suspense fallback={<EditorLoading />}>
           <EditorHeader workflowId={workflowId} />
-          <main className='flex-1'> 
+          <main className=''> 
           
               <Editor workflowId={workflowId} />
 

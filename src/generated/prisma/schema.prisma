@@ -53,13 +53,51 @@ model Session {
 }
 
 model Workflow {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId    String
+  id          String       @id @default(uuid())
+  name        String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  userId      String
+  nodes       Node[]
+  connections Connection[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Node {
+  id                String       @id @default(uuid())
+  workflowId        String
+  workflow          Workflow     @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  name              String
+  type              NodeType
+  position          Json
+  data              Json         @default("{}")
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  outputConnections Connection[] @relation("fromNode")
+  inputConnections  Connection[] @relation("toNode")
+}
+
+model Connection {
+  id         String   @id @default(uuid())
+  workflowId String
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  fromNodeId String
+  fromNode   Node     @relation("fromNode", fields: [fromNodeId], references: [id], onDelete: Cascade)
+  toNodeId   String
+  toNode     Node     @relation("toNode", fields: [toNodeId], references: [id], onDelete: Cascade)
+
+  fromOutput String @default("main")
+  toInput    String @default("main")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([fromNodeId, fromOutput, toNodeId, toInput])
+}
+
+enum NodeType {
+  INITIAL
 }
 
 model Account {

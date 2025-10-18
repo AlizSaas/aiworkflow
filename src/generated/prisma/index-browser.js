@@ -156,6 +156,28 @@ exports.Prisma.WorkflowScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.NodeScalarFieldEnum = {
+  id: 'id',
+  workflowId: 'workflowId',
+  name: 'name',
+  type: 'type',
+  position: 'position',
+  data: 'data',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ConnectionScalarFieldEnum = {
+  id: 'id',
+  workflowId: 'workflowId',
+  fromNodeId: 'fromNodeId',
+  toNodeId: 'toNodeId',
+  fromOutput: 'fromOutput',
+  toInput: 'toInput',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.AccountScalarFieldEnum = {
   id: 'id',
   accountId: 'accountId',
@@ -186,6 +208,10 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -196,12 +222,22 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+exports.NodeType = exports.$Enums.NodeType = {
+  INITIAL: 'INITIAL'
+};
 
 exports.Prisma.ModelName = {
   Test: 'Test',
   User: 'User',
   Session: 'Session',
   Workflow: 'Workflow',
+  Node: 'Node',
+  Connection: 'Connection',
   Account: 'Account',
   Verification: 'Verification'
 };
