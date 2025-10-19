@@ -48,3 +48,5 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
 );
 
 PlaceholderNode.displayName = "PlaceholderNode";
+
+// this component is used as a placeholder for nodes that are not yet implemented

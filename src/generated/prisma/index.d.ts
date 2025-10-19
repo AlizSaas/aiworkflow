@@ -59,7 +59,9 @@ export type Verification = $Result.DefaultSelection<Prisma.$VerificationPayload>
  */
 export namespace $Enums {
   export const NodeType: {
-  INITIAL: 'INITIAL'
+  INITIAL: 'INITIAL',
+  MANUAL_TRIGGER: 'MANUAL_TRIGGER',
+  HTTP_REQUEST: 'HTTP_REQUEST'
 };
 
 export type NodeType = (typeof NodeType)[keyof typeof NodeType]

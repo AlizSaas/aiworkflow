@@ -2,16 +2,20 @@
 
 import type { NodeProps } from "@xyflow/react"
 import { PlusIcon } from "lucide-react"
-import {memo} from 'react'
+import {memo, useState} from 'react'
 import { PlaceholderNode } from "./react-flow/placeholder-node"
 import { WorkflowNode } from "./workflow-node"
+import { NodeSelector } from "./node-selector"
 
 
 export const InitialNode = memo((props: NodeProps) => {
+    const [selectorOpen,setSelectorOpen] =  useState(false)
     return (
+        <NodeSelector open={selectorOpen} onOpenChange={setSelectorOpen}>
         <WorkflowNode showToolbar={false} > 
         <PlaceholderNode
         {...props}
+        onClick={() => setSelectorOpen(true)}
         
         
         >
@@ -21,6 +25,7 @@ export const InitialNode = memo((props: NodeProps) => {
             </div>
         </PlaceholderNode>
         </WorkflowNode>
+        </NodeSelector>
     )
 
 })
