@@ -51,3 +51,5 @@ export function WorkflowNode({ children, showToolbar=true, onDelete, onSettings,
 
     )
 }
+
+// this component is used to wrap workflow nodes and provide a consistent toolbar UI
