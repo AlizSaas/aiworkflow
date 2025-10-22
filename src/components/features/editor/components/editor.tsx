@@ -7,6 +7,8 @@ import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, type Node, type
 import '@xyflow/react/dist/style.css';
 import { nodeComponents } from "@/config/node-components";
 import { AddNodeButton } from "./add-node-button";
+import { useSetAtom } from "jotai";
+import { editorAtom } from "../store/atoms";
 
 export const EditorLoading = () => {
     return <LoadingView message="Loading Editor..." />
@@ -19,6 +21,7 @@ export const EditorError = () => {
 
 export const Editor = ({ workflowId }: { workflowId: string }) => {
     const { data: workflow } = useSuspenseWorkflow(workflowId)
+    const setEditor = useSetAtom(editorAtom)
     const [nodes, setNodes] = useState<Node[]>(workflow.nodes)
     const [edges, setEdges] = useState<Edge[]>(workflow.edges)
 
@@ -33,12 +36,12 @@ export const Editor = ({ workflowId }: { workflowId: string }) => {
     const onConnect = useCallback(
         (params: Connection) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
         [],
-    )
+    ) // onConnect callback to handle new connections between nodes 
 
     // React Flow requires the parent container to have an explicit height.
     // If you still don't see anything, adjust the height value below or your global CSS.
     return (
-        <div style={{ width: '100%', height: '80vh' }}>
+        <div style={{height:'80vh',width:'100%'}}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -47,7 +50,13 @@ export const Editor = ({ workflowId }: { workflowId: string }) => {
                 onConnect={onConnect}
                 nodeTypes={nodeComponents}
                 fitView
-                proOptions={{hideAttribution:true}}
+                onInit={setEditor}
+               panOnScroll
+            
+             
+          
+              
+        
             >
                 <Background />
                 <Controls />

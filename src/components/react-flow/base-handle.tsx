@@ -24,3 +24,5 @@ export const BaseHandle = forwardRef<HTMLDivElement, BaseHandleProps>(
 );
 
 BaseHandle.displayName = "BaseHandle";
+
+// this component is used as a base handle for all handles in the application
