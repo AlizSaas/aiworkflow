@@ -97,7 +97,7 @@ model Connection {
   updatedAt DateTime @updatedAt
   @@unique([ fromNodeId, fromOutput, toNodeId, toInput])
 
-}
+} // End Connection model 
 
 enum NodeType {
   INITIAL

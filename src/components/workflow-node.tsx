@@ -38,7 +38,7 @@ export function WorkflowNode({ children, showToolbar=true, onDelete, onSettings,
                 </p>
                 {
                     description && (
-                        <p className="text-xs text-muted-foreground truncate">
+                        <p className="text-sm text-muted-foreground truncate">
                             {description}
                         </p>
                     )

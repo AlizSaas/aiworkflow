@@ -1,10 +1,12 @@
 'use client'
 
-import type {Node,NodeProps} from '@xyflow/react'
+import {useReactFlow, type Node,type NodeProps} from '@xyflow/react'
 
 import { GlobeIcon } from 'lucide-react'
-import {memo} from 'react'
+import {memo, useEffect, useState} from 'react'
 import {BaseExecutionNode} from '../base-execution-node'
+import { FormType, HttpRequestDialog } from './dialog'
+
 
 type HttpRequestNodeData = {
     endPoint?: string,
@@ -17,19 +19,61 @@ type HttpRequestNodeData = {
 type HttpRequestNodeType = Node<HttpRequestNodeData>
 
 export const HttpRequestNode= memo((props:NodeProps<HttpRequestNodeType>)=>{
+    const [dialogOpen,setDialogOpen]=useState(false)
+    const {setNodes} = useReactFlow()   
+    const status = 'initial'   
     const nodeData = props.data as HttpRequestNodeData
 const description = nodeData?.endPoint ? `${nodeData.method || 'GET'} : ${nodeData.endPoint}` :  'Not configured'
+const handleOpenSettings = () => {
+    setDialogOpen(true)
+}
+const handleSubmit =  (values:FormType )  => {
+    setNodes((nodes) => {
+        return nodes.map((node) => {
+            if(node.id === props.id) {
+                return {
+                    ...node,
+                    data:{
+                        ...node.data,
+                        endPoint: values.endPoint,
+                        method: values.method,
+                        body: values.body,
+
+                    }
+                }
+
+            }
+            return node
+
+        })
+    
+
+    })
+
+    console.log('HTTP Request Node updated with values:', values);
+
+
+
+} // render the HTTP Request node
 
 return (
     <>
+    <HttpRequestDialog
+    onSubmit={handleSubmit}
+    defaultEndpoint={nodeData.endPoint}
+    defaultBody={nodeData.body}
+    defaultMethod={nodeData.method}
+    
+    open={dialogOpen} onOpenChange={setDialogOpen} />
     <BaseExecutionNode
     {...props}
     id={props.id}
     icon={GlobeIcon}
     name={'HTTP Request'}
+    status={status}
     description={description}
-    onSetting={() =>{}}
-    onDoubleClick={() => {}}
+    onSetting={handleOpenSettings}
+    onDoubleClick={handleOpenSettings}
     
     />
     

@@ -1,12 +1,13 @@
 'use client'
 
-import {Position,NodeProps} from '@xyflow/react'
+import {Position,NodeProps, useReactFlow} from '@xyflow/react'
 import  type {LucideIcon} from 'lucide-react'
 import Image from 'next/image'
 import {memo,} from 'react'
 import {BaseNode,BaseNodeContent} from '@/components/react-flow/base-node'
 import {BaseHandle} from '../../../react-flow/base-handle'
 import { WorkflowNode } from '../../../workflow-node'
+import { NodeStatus, NodeStatusIndicator } from '@/components/react-flow/node-status-indicator'
 // import {} from '@/generated/prisma'
 
 interface BaseExecutionNodeProps extends NodeProps {
@@ -15,26 +16,42 @@ interface BaseExecutionNodeProps extends NodeProps {
     name: string,
     description?: string,
     children?: React.ReactNode,
-    // status?:NodeStatus
+    status?:NodeStatus
     onSetting?:()=>void
     onDoubleClick?:()=>void
 
 }
 
 
-export const BaseExecutionNode= memo(({children,onDoubleClick,onSetting,icon:Icon,name,description,id}:BaseExecutionNodeProps)=>{
-    const handleDelete = () => {}
+export const BaseExecutionNode= memo(({children,onDoubleClick,onSetting,icon:Icon,name,description,id,status='initial'}:BaseExecutionNodeProps)=>{
+    const {setNodes,setEdges} = useReactFlow()
+    const handleDelete = () => {
+          setNodes((currentNodes) => {
+            const updatedNotes = currentNodes.filter((node) => node.id !== id) // Remove the node with the matching id
+            return updatedNotes
+        })
+        setEdges((currentEdges) => {
+            const updatedEdges = currentEdges.filter((edge) => edge.source !== id && edge.target !== id) // Remove edges connected to the node
+            return updatedEdges
+        })
+    }
 return (
     <WorkflowNode
     name={name}
     description={description}
     onDelete={handleDelete}
     onSettings={onSetting}
+
     
     
     
     >
-        <BaseNode onDoubleClick={onDoubleClick}>
+        <NodeStatusIndicator
+        variant='border'
+         status={status}>
+        <BaseNode
+        status={status}
+        onDoubleClick={onDoubleClick}>
         <BaseNodeContent>
         {
             typeof Icon === 'string' ? (
@@ -59,10 +76,13 @@ return (
         </BaseNodeContent>
         
         </BaseNode>
+        </NodeStatusIndicator>
 
 
     </WorkflowNode>
+    
 )
+
 })
 
 BaseExecutionNode.displayName='BaseExecutionNode'

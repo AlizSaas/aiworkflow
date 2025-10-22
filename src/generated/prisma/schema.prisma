@@ -95,6 +95,7 @@ model Connection {
 
   @@unique([fromNodeId, fromOutput, toNodeId, toInput])
 }
+// End Connection model 
 
 enum NodeType {
   INITIAL
