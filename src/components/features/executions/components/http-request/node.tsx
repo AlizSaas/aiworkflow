@@ -6,6 +6,11 @@ import { GlobeIcon } from 'lucide-react'
 import {memo, useEffect, useState} from 'react'
 import {BaseExecutionNode} from '../base-execution-node'
 import { HttpRequestFormValues, HttpRequestDialog } from './dialog'
+import { useNodeStatus } from '../../hooks/use-node-status'
+import { channel } from 'diagnostics_channel'
+import { fetchHttpRequestRealtimeToken } from './action'
+import { HTTP_REQUEST_CHANNEL_Name, httpRequestChannel } from '@/inngest/channels/http-request'
+
 
 
 type HttpRequestNodeData = {
@@ -22,7 +27,7 @@ type HttpRequestNodeType = Node<HttpRequestNodeData>
 export const HttpRequestNode= memo((props:NodeProps<HttpRequestNodeType>)=>{
     const [dialogOpen,setDialogOpen]=useState(false)
     const {setNodes} = useReactFlow()   
-    const status = 'initial'   
+    const nodeStatus =  useNodeStatus({nodeId:props.id,channel: HTTP_REQUEST_CHANNEL_Name,topic:'status',refreshToken:fetchHttpRequestRealtimeToken}) 
     const nodeData = props.data as HttpRequestNodeData
 const description = nodeData?.endpoint ? `${nodeData.method || 'GET'} : ${nodeData.endpoint}` :  'Not configured'
 const handleOpenSettings = () => {
@@ -67,7 +72,7 @@ return (
     id={props.id}
     icon={GlobeIcon}
     name={'HTTP Request'}
-    status={status}
+    status={nodeStatus}
     description={description}
     onSetting={handleOpenSettings}
     onDoubleClick={handleOpenSettings}

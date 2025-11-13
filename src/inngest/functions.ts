@@ -8,15 +8,21 @@ import { NonRetriableError } from "inngest";
 import { topologicalSort } from "./utils";
 import { NodeType } from "@/generated/prisma";
 import { getExecuter } from "@/components/features/executions/components/lib/executor-registry";
+import { httpRequestChannel, } from "./channels/http-request";
+import { manualTriggerChannel } from "./channels/manual-trigger";
+
 export const executeWorkFlow = inngest.createFunction(
-  { id: "execute-workflow" },
-  { event: "workflow/execute.workflow" },
-  async ({ event, step }) => {
+  { id: "execute-workflow",retries:1 },
+  { event: "workflow/execute.workflow", channel:[httpRequestChannel(),manualTriggerChannel()] },
+  
+  async ({ event, step,publish,}) => {
     const workflowId = event.data.workflowId;
 
     if(!workflowId) {
       throw new NonRetriableError("No workflow ID provided");
     }
+
+
 
 
 
@@ -49,7 +55,8 @@ for(const node of sortedNodes) {
     data:node.data as Record<string, unknown>,
     nodeId: node.id,
     context,
-    step
+    step,
+    publish
   })
 }
 
