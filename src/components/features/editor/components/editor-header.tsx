@@ -23,8 +23,8 @@ export const EditorSaveButton = ({workflowId}:{workflowId:string}) => {
   const saveWorkflow = useUpdateWorkflow()
   const handleSave = () => {
     if(!editor) return
-    const nodes = editor.getNodes()
-    const edges = editor.getEdges()
+    const nodes = editor.getNodes() // get current nodes from the editor
+    const edges = editor.getEdges() // get current edges from the editor
     saveWorkflow.mutate({
       id: workflowId,
       nodes,
@@ -134,7 +134,7 @@ export const EditorBreadcrumbs = ({workflowId}:{workflowId:string}) => {
        <BreadcrumbList>
        <BreadcrumbItem>
        <BreadcrumbLink asChild>
-       <Link prefetch href={`/workflows/`}>
+       <Link prefetch href={`/workflows`}>
        Workflow 
        </Link>
        </BreadcrumbLink>
