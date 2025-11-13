@@ -48,6 +48,7 @@ export const HttpRequestDialog = ({open,onOpenChange,onSubmit,defaultValues}:Pro
         
     }
 },[open,defaultValues,form]);
+const watchVariableName = form.watch('variableName');
 const watchMethod = form.watch('method');
 const showBodyField = watchMethod === 'POST' || watchMethod === 'PUT' || watchMethod === 'PATCH';
 const handleFormSubmit = (values:z.infer<typeof formSchema>) => {
@@ -70,6 +71,24 @@ const handleFormSubmit = (values:z.infer<typeof formSchema>) => {
         <Form {...form}>
             <form  onSubmit={form.handleSubmit(handleFormSubmit)}
             className="space-y-6 mt-4" > 
+          <FormField 
+            control={form.control}
+             name="variableName"
+             render={({field}) => (
+                        <FormItem>
+                            <FormLabel>Variable Name</FormLabel>
+                            <FormControl>
+                                <Input placeholder="myApiCall" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                      Use this name to reference the result in other nodes: {`{{${watchVariableName}.status}}, {{${watchVariableName}.data}}`}
+                            </FormDescription>
+                    <FormMessage />
+
+
+                </FormItem>
+             )}/>
+
             <FormField 
             control={form.control}
              name="method"

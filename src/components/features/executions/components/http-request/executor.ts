@@ -1,10 +1,17 @@
 import type { NodeExecutor } from "@/components/features/executions/types";
 import { NonRetriableError } from "inngest";
 import ky, {type Options as KyOptions} from "ky";
+import Handlebars from "handlebars";
+Handlebars.registerHelper('json', function(context) {
+  const jsonString = JSON.stringify(context);
+   const safeString =  new Handlebars.SafeString(jsonString);
+    return safeString;
+}); // Register 'json' helper
+
 type HttpsRequestData  = {
-     variableName?: string;
-    endpoint?: string;
-    method?:  "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+     variableName: string;
+    endpoint: string;
+    method:  "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
     body?: string;
 }
 
@@ -18,14 +25,21 @@ export const httpRequestExecutor: NodeExecutor<HttpsRequestData> = async ({conte
  if(!data.variableName) {
         throw new NonRetriableError("No variable name provided for HTTP request");
     }
+    if(!data.method) {
+        throw new NonRetriableError("No method provided for HTTP request");
+    }
 
 const result  = await step.run('http-request', async () => {
-    const endpoint = data.endpoint!;
-    const method  = data.method || "GET";
+    const endpoint = Handlebars.compile(data.endpoint)(context);
+    console.log("🚀 Executing HTTP Request to:", endpoint);
+    const method  = data.method
 
     const options: KyOptions = {method};
     if(["POST","PUT","PATCH"].includes(method) && data.body) {
-        options.body = data.body;
+  const resolved  = Handlebars.compile(data.body)(context);
+  JSON.parse(resolved); // Validate JSON
+        options.body = resolved; // Set body only if it's valid JSON
+
            options.headers = {
             'Content-Type': 'application/json'
         }
@@ -47,18 +61,15 @@ const result  = await step.run('http-request', async () => {
     }
 
  
-    if(data.variableName) {
+
 
     return {
         ...context,
-        [data.variableName!]: responsePayload
+        [data.variableName]: responsePayload
       
     }
-}
-return {
-    ...context,
-    ...responsePayload
-}
+
+
 
 }) 
 
