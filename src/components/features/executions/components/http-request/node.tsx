@@ -9,7 +9,8 @@ import { HttpRequestFormValues, HttpRequestDialog } from './dialog'
 
 
 type HttpRequestNodeData = {
-    endPoint?: string,
+ variableName?: string,
+    endpoint?: string,
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH', 
     body?: string,
   
@@ -23,7 +24,7 @@ export const HttpRequestNode= memo((props:NodeProps<HttpRequestNodeType>)=>{
     const {setNodes} = useReactFlow()   
     const status = 'initial'   
     const nodeData = props.data as HttpRequestNodeData
-const description = nodeData?.endPoint ? `${nodeData.method || 'GET'} : ${nodeData.endPoint}` :  'Not configured'
+const description = nodeData?.endpoint ? `${nodeData.method || 'GET'} : ${nodeData.endpoint}` :  'Not configured'
 const handleOpenSettings = () => {
     setDialogOpen(true)
 }
