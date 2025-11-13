@@ -2,13 +2,15 @@
 
 import { ErrorView, LoadingView } from "@/components/entity-components"
 import { useSuspenseWorkflow } from "../../workflows/hooks/use-workflows"
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, type Node, type Edge,  type NodeChange,  type EdgeChange, type Connection, Background, Controls, MiniMap, Panel } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { nodeComponents } from "@/config/node-components";
 import { AddNodeButton } from "./add-node-button";
 import { useSetAtom } from "jotai";
 import { editorAtom } from "../store/atoms";
+import { NodeType } from "@/generated/prisma";
+import ExecuteWorkflowButton from "./execute-workflow-button";
 
 export const EditorLoading = () => {
     return <LoadingView message="Loading Editor..." />
@@ -40,6 +42,10 @@ export const Editor = ({ workflowId }: { workflowId: string }) => {
 
     // React Flow requires the parent container to have an explicit height.
     // If you still don't see anything, adjust the height value below or your global CSS.
+
+    const hasManualTrigger = useMemo(() => {
+        return nodes.some((node) => node.type === NodeType.MANUAL_TRIGGER)
+    },[nodes])
     return (
         <div style={{height:'80vh',width:'100%'}}>
             <ReactFlow
@@ -64,6 +70,13 @@ export const Editor = ({ workflowId }: { workflowId: string }) => {
                 <Panel position="top-right">
                     <AddNodeButton  />
                 </Panel>
+            {
+                hasManualTrigger && (
+                    <Panel position="bottom-center">
+                        <ExecuteWorkflowButton workflowId={workflowId} />
+                    </Panel>
+                )
+            }
 
 
             </ReactFlow>

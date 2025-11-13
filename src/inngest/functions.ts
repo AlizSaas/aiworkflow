@@ -1,27 +1,67 @@
 import { inngest } from "@/inngest/client";
+import { prisma } from "@/lib/db";
 
 
 import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
-export const executeAI = inngest.createFunction(
-  { id: "execute-ai" },
-  { event: "execute/ai" },
+import { NonRetriableError } from "inngest";
+import { topologicalSort } from "./utils";
+import { NodeType } from "@/generated/prisma";
+import { getExecuter } from "@/components/features/executions/components/lib/executor-registry";
+export const executeWorkFlow = inngest.createFunction(
+  { id: "execute-workflow" },
+  { event: "workflow/execute.workflow" },
   async ({ event, step }) => {
+    const workflowId = event.data.workflowId;
 
-    const {steps} = await step.ai.wrap( 'Generating Text', generateText,{
-      model: openai('gpt-4.1'),
-      system:'You are a helpful assistant that helps people find information.',
-      prompt: 'Write a short describtion about  cbr honda bikes.',
-      experimental_telemetry:{
-        isEnabled:true,
-        recordInputs:true,
-        recordOutputs:true,
+    if(!workflowId) {
+      throw new NonRetriableError("No workflow ID provided");
+    }
+
+
+
+
+const sortedNodes  = await step.run('prepare-workflow' , async () => {
+  const workflow = await prisma.workflow.findUniqueOrThrow({
+    where:{
+      id: workflowId},
+      include:{
+        nodes:true,
+        connections:true
       }
+  })
+  return topologicalSort(workflow.nodes,workflow.connections);
 
 
-    });
+})
 
-    return steps;
+
+//initialize context 
+let context  = event.data.initialData || {}
+
+// execute each node 
+
+for(const node of sortedNodes) {
+  const executer  = getExecuter(node.type as NodeType) // gets the type of node\
+   console.log("🚀 Running node:", node.name, "with data:", node.data);
+
+   context  = await executer({
+    data:node.data as Record<string, unknown>,
+    nodeId: node.id,
+    context,
+    step
+  })
+}
+
+return {
+  workflowId,
+  result:context
+} // why return as object? 
+
+
+
+
+   
 
 
   

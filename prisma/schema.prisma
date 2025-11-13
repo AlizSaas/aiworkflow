@@ -74,8 +74,8 @@ model Node {
   data Json @default("{}")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  outputConnections Connection[] @relation("fromNode")
-  inputConnections Connection[] @relation("toNode")
+  outputConnections Connection[] @relation("fromNode") // connections where this node is the source
+  inputConnections Connection[] @relation("toNode") // connections where this node is the target
 
 
     

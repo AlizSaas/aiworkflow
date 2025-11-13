@@ -8,7 +8,7 @@ async redirects() {
       source: '/',
       destination: '/workflows',
       permanent: false, // 307 Temporary Redirect
-    }
+    } // Redirect from root to /workflows
   ]
 }
 };

@@ -283,7 +283,7 @@ export const EntityItem = ({ href, title, substitle, image, actions, onRemove,cl
         if(onRemove) {
             await onRemove()
         }
-    }
+    } //
 
     return (
         <Link href={href} prefetch>
