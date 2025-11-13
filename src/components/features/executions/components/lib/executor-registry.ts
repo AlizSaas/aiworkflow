@@ -5,7 +5,7 @@ import { httpRequestExecutor } from "../http-request/executor";
 
 export const executersRegistry: Record<NodeType, NodeExecutor> = {
     [NodeType.MANUAL_TRIGGER]:manualTriggerExecutor, // calls the manual trigger executor
-    [NodeType.HTTP_REQUEST]: httpRequestExecutor,
+    [NodeType.HTTP_REQUEST]: httpRequestExecutor, // todo fix types
     INITIAL: async ({context}) => context, // placeholder
  
 
