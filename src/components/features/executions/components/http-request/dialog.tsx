@@ -10,7 +10,8 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod';
 const formSchema = z.object({
-    endPoint: z.url({message: "Invalid URL format"}),
+       variableName: z.string().min(1,{message: "Variable name is required"}).regex(/^[a-zA-Z_][a-zA-Z0-9_]*$/, {message: "Variable name must start with a letter or underscore and contain only letters, numbers, and underscores"}),
+    endpoint: z.url({message: "Invalid URL format"}),
     method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']),
     body: z.string().optional(),
 });
@@ -30,7 +31,8 @@ export const HttpRequestDialog = ({open,onOpenChange,onSubmit,defaultValues}:Pro
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            endPoint: defaultValues.endPoint || '',
+            variableName: defaultValues.variableName || '',
+            endpoint: defaultValues.endpoint || '',
             method: defaultValues.method || 'GET',
             body: defaultValues.body || ''
         }
@@ -38,7 +40,8 @@ export const HttpRequestDialog = ({open,onOpenChange,onSubmit,defaultValues}:Pro
     useEffect(() => {
     if(open) {
         form.reset({
-            endPoint: defaultValues.endPoint || '',
+            variableName: defaultValues.variableName || '',
+            endpoint: defaultValues.endpoint || '',
             method: defaultValues.method || 'GET',
             body: defaultValues.body || ''
         });
@@ -102,7 +105,7 @@ const handleFormSubmit = (values:z.infer<typeof formSchema>) => {
              )}/>
             <FormField 
             control={form.control}
-             name="endPoint"
+             name="endpoint"
              render={({field}) => (
                         <FormItem>
                             <FormLabel>HTTP Endpoint</FormLabel>
