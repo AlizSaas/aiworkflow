@@ -178,6 +178,51 @@ exports.Prisma.ConnectionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.WorkflowExecutionScalarFieldEnum = {
+  id: 'id',
+  workflowId: 'workflowId',
+  userId: 'userId',
+  status: 'status',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  result: 'result',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ExecutionLogScalarFieldEnum = {
+  id: 'id',
+  executionId: 'executionId',
+  nodeId: 'nodeId',
+  nodeName: 'nodeName',
+  status: 'status',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  output: 'output',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CredentialScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  type: 'type',
+  value: 'value',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.WebhookScalarFieldEnum = {
+  id: 'id',
+  workflowId: 'workflowId',
+  userId: 'userId',
+  name: 'name',
+  secret: 'secret',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.AccountScalarFieldEnum = {
   id: 'id',
   accountId: 'accountId',
@@ -212,6 +257,11 @@ exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -233,6 +283,20 @@ exports.NodeType = exports.$Enums.NodeType = {
   HTTP_REQUEST: 'HTTP_REQUEST'
 };
 
+exports.ExecutionStatus = exports.$Enums.ExecutionStatus = {
+  PENDING: 'PENDING',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+exports.CredentialType = exports.$Enums.CredentialType = {
+  API_KEY: 'API_KEY',
+  BASIC_AUTH: 'BASIC_AUTH',
+  OAUTH2: 'OAUTH2',
+  CUSTOM: 'CUSTOM'
+};
+
 exports.Prisma.ModelName = {
   Test: 'Test',
   User: 'User',
@@ -240,6 +304,10 @@ exports.Prisma.ModelName = {
   Workflow: 'Workflow',
   Node: 'Node',
   Connection: 'Connection',
+  WorkflowExecution: 'WorkflowExecution',
+  ExecutionLog: 'ExecutionLog',
+  Credential: 'Credential',
+  Webhook: 'Webhook',
   Account: 'Account',
   Verification: 'Verification'
 };

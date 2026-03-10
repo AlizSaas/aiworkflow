@@ -29,9 +29,12 @@ model User {
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now()) @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  workflows     Workflow[]  
+  sessions           Session[]
+  accounts           Account[]
+  workflows          Workflow[]
+  workflowExecutions WorkflowExecution[]
+  credentials        Credential[]
+  webhooks           Webhook[]
 
   @@unique([email])
   @@map("user")
@@ -53,13 +56,15 @@ model Session {
 }
 
 model Workflow {
-  id String @id @default(uuid())
-  name String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId String
-  nodes Node[]
+  id          String              @id @default(uuid())
+  name        String
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  userId      String
+  nodes       Node[]
   connections Connection[]
+  executions  WorkflowExecution[]
+  webhooks    Webhook[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -103,7 +108,76 @@ enum NodeType {
   INITIAL
   MANUAL_TRIGGER
   HTTP_REQUEST
+}
 
+enum ExecutionStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model WorkflowExecution {
+  id          String          @id @default(uuid())
+  workflowId  String
+  workflow    Workflow        @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status      ExecutionStatus @default(PENDING)
+  startedAt   DateTime        @default(now())
+  completedAt DateTime?
+  result      Json?
+  logs        ExecutionLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ExecutionLog {
+  id          String            @id @default(uuid())
+  executionId String
+  execution   WorkflowExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+  nodeId      String
+  nodeName    String
+  status      ExecutionStatus
+  startedAt   DateTime          @default(now())
+  completedAt DateTime?
+  output      Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum CredentialType {
+  API_KEY
+  BASIC_AUTH
+  OAUTH2
+  CUSTOM
+}
+
+model Credential {
+  id        String         @id @default(uuid())
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  type      CredentialType @default(CUSTOM)
+  value     String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@unique([userId, name])
+}
+
+model Webhook {
+  id         String   @id @default(uuid())
+  workflowId String
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  secret     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 
