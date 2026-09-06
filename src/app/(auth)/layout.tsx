@@ -3,7 +3,6 @@ import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import Image from 'next/image'
-import logo from '../../../public/flow.png'
 
 
 export default async function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -26,7 +25,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
       <Link href={'/'} className='flex items-center self-center font-medium gap-2'>
       <Image 
       className='rounded-full'
-      src={logo} alt='logo' width={32} height={32} />
+      src="/flow.png" alt='logo' width={32} height={32} />
      <span className='font-bold'> FlowRiz</span>
 
       
@@ -41,4 +40,3 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
    </div>
   )
 }
-
