@@ -15,19 +15,6 @@ export const trpc = createTRPCOptionsProxy({
 });
 
 export const caller = appRouter.createCaller(createTRPCContext);
-type QueryOptions = Parameters<ReturnType<typeof getQueryClient>["prefetchQuery"]>[0];
-type InfiniteQueryOptions = Parameters<
-  ReturnType<typeof getQueryClient>["prefetchInfiniteQuery"]
->[0];
-
-export function prefetch(queryOptions: QueryOptions | InfiniteQueryOptions) {
-  const queryClient = getQueryClient();
-  if (queryOptions.queryKey[1]?.type === 'infinite') {
-    void queryClient.prefetchInfiniteQuery(queryOptions as InfiniteQueryOptions);
-  } else {
-    void queryClient.prefetchQuery(queryOptions as QueryOptions);
-  }
-}
 
 export function HydrateClient(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
