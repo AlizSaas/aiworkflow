@@ -3,13 +3,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 
-import React, { useState, useTransition } from 'react'
+import React, { Suspense, useState, useTransition } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { Loader } from 'lucide-react'
 import { authClient } from '@/lib/auth-clients'
 
-export default  function VerifyRequest() {
+function VerifyRequestContent() {
     const router = useRouter()
     
     const searchParams = useSearchParams()
@@ -81,5 +81,13 @@ export default  function VerifyRequest() {
         
     </CardHeader>
   </Card>
+  )
+}
+
+export default function VerifyRequest() {
+  return (
+    <Suspense fallback={null}>
+      <VerifyRequestContent />
+    </Suspense>
   )
 }
