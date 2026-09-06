@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FlowRiz
 
-## Getting Started
+FlowRiz is a workflow automation app built with Next.js. Users can sign in, create visual workflows, trigger them manually or by webhook, execute HTTP request steps, store credentials, and inspect execution logs.
 
-First, run the development server:
+## Stack
+
+- Next.js 15 + React 19
+- tRPC 11
+- Prisma + PostgreSQL
+- Better Auth
+- Inngest
+- Tailwind CSS + Radix UI
+- Sentry
+
+## Main Features
+
+- Visual workflow editor
+- Workflow list and detail pages
+- Manual and webhook workflow triggers
+- HTTP request execution node
+- Credential storage
+- Execution history and per-node logs
+- Subscription gating for workflow creation through Polar
+
+## API Endpoints
+
+- `GET/POST /api/auth/[...all]` — authentication
+- `GET/POST /api/trpc/[trpc]` — tRPC procedures for workflows, executions, credentials, and webhooks
+- `GET/POST/PUT /api/inngest` — Inngest dev/serve endpoint
+- `POST /api/webhook/[webhookId]` — webhook trigger endpoint with optional `x-webhook-signature`
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and fill in the values:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Required for local development:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `DATABASE_URL`
+- `BETTER_AUTH_SECRET`
+- `BETTER_AUTH_URL`
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `POLAR_ACCESS_TOKEN`
+- `POLAR_SUCCESS_URL`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Local Setup
 
-## Learn More
+1. Install dependencies:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. Create your env file:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   cp .env.example .env
+   ```
 
-## Deploy on Vercel
+3. Generate Prisma client:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   npx prisma generate
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Run database migrations:
+
+   ```bash
+   npx prisma migrate dev
+   ```
+
+5. Start the Next.js app:
+
+   ```bash
+   npm run dev
+   ```
+
+6. In a second terminal, start Inngest locally:
+
+   ```bash
+   npm run inngest:dev
+   ```
+
+7. Open `http://localhost:3000`.
+
+## VS Code Checklist
+
+- Node.js 20+
+- npm 10+
+- PostgreSQL running locally or a hosted PostgreSQL database
+- A `.env` file created from `.env.example`
+- Two terminals:
+  - `npm run dev`
+  - `npm run inngest:dev`
+
+## Validation Run In This Repo
+
+- `npm install` ✅
+- `npm run lint` ✅ after ignoring generated Prisma output
+- `npx tsc --noEmit` ✅ after restoring Next.js type declarations
+- `npm run build` ✅ after removing remote Google font dependency
+
+## Notes
+
+- The checked-in README was placeholder boilerplate before this update.
+- There is no automated test suite in `package.json` yet, so lint, typecheck, and production build are the available validation steps.
